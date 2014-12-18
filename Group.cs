@@ -11,6 +11,7 @@ namespace TSVCEO.LASDDatabase
         public string KLA { get; set; }
         public Group Parent { get; set; }
         public string GroupName { get; set; }
+        public string GroupId { get; set; }
         public Dictionary<string, Group> ChildGroups { get; set; }
         public List<Entry> ChildEntries { get; set; }
 
@@ -18,14 +19,15 @@ namespace TSVCEO.LASDDatabase
         {
             this.ChildEntries = new List<Entry>();
             this.ChildGroups = new Dictionary<string, Group>();
+            this.GroupId = Guid.NewGuid().ToString();
         }
 
-        public Group(Group grp, Group parent)
+        public Group(Group grp)
         {
             YearLevel = grp.YearLevel;
             KLA = grp.KLA;
             GroupName = grp.GroupName;
-            ChildGroups = grp.ChildGroups.ToDictionary(kvp => kvp.Key, kvp => new Group(kvp.Value, this));
+            ChildGroups = grp.ChildGroups.ToDictionary(kvp => kvp.Key, kvp => new Group(kvp.Value));
             ChildEntries = grp.ChildEntries.Select(e => new Entry(e)).ToList();
         }
 
