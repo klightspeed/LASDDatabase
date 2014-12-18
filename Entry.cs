@@ -10,6 +10,7 @@ namespace TSVCEO.LASDDatabase
     {
         public string EntryID { get; set; }
         public string SourceEntryID { get; set; }
+        public string EntryDraftId { get; set; }
         public bool IsEnabled { get; set; }
         public string YearLevel { get; set; }
         public string KLA { get; set; }
@@ -51,6 +52,7 @@ namespace TSVCEO.LASDDatabase
             this.AchievementDescriptors = entry.AchievementDescriptors.Select(v => new AchievementDescriptor { Text = v.Text }).ToArray();
             this.SourceEntryID = entry.SourceEntryID;
             this.EntryID = entry.EntryID;
+            this.EntryDraftId = entry.EntryDraftId;
         }
 
         public virtual void Enable()
