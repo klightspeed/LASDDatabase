@@ -247,7 +247,7 @@ namespace TSVCEO.LASDDatabase
                 {
                     if (text[startpos] == ' ')
                     {
-                        yield return new XElement("space", new XAttribute(XNamespace.Xml + "space", "preserve"), " ");
+                        yield return new XElement(ns + "space", new XAttribute(XNamespace.Xml + "space", "preserve"), " ");
                         while (startpos < matchpos && text[startpos] == ' ')
                         {
                             startpos++;
