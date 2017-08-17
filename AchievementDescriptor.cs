@@ -264,40 +264,47 @@ namespace TSVCEO.LASDDatabase
 
         protected static XElement FindTerms(XNamespace ns, XElement element, Dictionary<string, string> terms)
         {
-            XElement ret = new XElement(element.Name, element.Attributes());
-            StringBuilder sb = new StringBuilder();
-
-            foreach (XNode node in element.Nodes())
+            if (element.Name.LocalName == "quality" || element.Name.LocalName == "sup")
             {
-                if (node is XText)
-                {
-                    sb.Append(((XText)node).Value);
-                }
-                else
-                {
-                    if (sb.Length != 0)
-                    {
-                        ret.Add(FindTerms(ns, sb.ToString(), terms));
-                        sb = new StringBuilder();
-                    }
+                return element;
+            }
+            else
+            {
+                XElement ret = new XElement(element.Name, element.Attributes());
+                StringBuilder sb = new StringBuilder();
 
-                    if (node is XElement)
+                foreach (XNode node in element.Nodes())
+                {
+                    if (node is XText)
                     {
-                        ret.Add(FindTerms(ns, (XElement)node, terms));
+                        sb.Append(((XText)node).Value);
                     }
                     else
                     {
-                        ret.Add(node);
+                        if (sb.Length != 0)
+                        {
+                            ret.Add(FindTerms(ns, sb.ToString(), terms));
+                            sb = new StringBuilder();
+                        }
+
+                        if (node is XElement)
+                        {
+                            ret.Add(FindTerms(ns, (XElement)node, terms));
+                        }
+                        else
+                        {
+                            ret.Add(node);
+                        }
                     }
                 }
-            }
 
-            if (sb.Length != 0)
-            {
-                ret.Add(FindTerms(ns, sb.ToString(), terms));
-            }
+                if (sb.Length != 0)
+                {
+                    ret.Add(FindTerms(ns, sb.ToString(), terms));
+                }
 
-            return ret;
+                return ret;
+            }
         }
 
         public static XElement[] FindTerms(XNamespace ns, XElement[] elements, Dictionary<string, string> terms)
@@ -307,6 +314,8 @@ namespace TSVCEO.LASDDatabase
                            .Select(el => MergeFormatting(el, "b"))
                            .Select(el => MergeFormatting(el, "u"))
                            .Select(el => MergeFormatting(el, "i"))
+                           .Select(el => MergeFormatting(el, "sup"))
+                           .Select(el => MergeFormatting(el, "quality"))
                            .Select(el => UnescapeSpace(el))
                            .Select(el => FindTerms(ns, el, terms))
                            .ToArray();
